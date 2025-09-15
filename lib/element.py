@@ -277,17 +277,27 @@ class PageElement(Element):
                     # since comment and processing instruction nodes do not
                     # have string tags, e.g., etree.Comment and etree.PI.
                     try:
-                        element.set('style', 'color:%s' % self.original_color)
+                        # Set both color and margin styles, merging if existing style exists
+                        existing_style = element.get('style')
+                        color_style = 'color:%s' % self.original_color
+                        margin_style = 'margin:3%;'
+                        # Preserve any existing styles and append/merge new ones
+                        new_style = ''
+                        if existing_style:
+                            new_style = f"{existing_style}; {color_style}; {margin_style}"
+                        else:
+                            new_style = f"{color_style}; {margin_style}"
+                        element.set('style', new_style)
                     except TypeError:
                         log.warn(
                             'Failed to set style on element:',
-                            get_string(element))
+                            get_string(element))))
         if translation is None:
             if self.position in ('left', 'right'):
                 self.element.addnext(self._create_table())
                 self._safe_remove(self.element)
             return
-
+        
         # Escape the markups (<m id=1 />) to replace escaped markups.
         translation = xml_escape(translation)
         for rid, element in enumerate(self.reserve_elements):
