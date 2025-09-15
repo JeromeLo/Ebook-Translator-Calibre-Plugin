@@ -291,7 +291,7 @@ class PageElement(Element):
                     except TypeError:
                         log.warn(
                             'Failed to set style on element:',
-                            get_string(element))))
+                            get_string(element))
         if translation is None:
             if self.position in ('left', 'right'):
                 self.element.addnext(self._create_table())
